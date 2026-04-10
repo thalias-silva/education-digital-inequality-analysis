@@ -1,2 +1,2 @@
-# desigualdade-digital-censo-escolar
-Análise da desigualdade digital com base no Censo Escolar
+# education-digital-inequality-analysis
+Analysis of the digital divide based on the Brazilian School Census
