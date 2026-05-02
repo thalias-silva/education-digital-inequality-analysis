@@ -2,7 +2,8 @@ import os
 import requests
 import zipfile
 from bs4 import BeautifulSoup
-from src.ingestion.minio_client import upload_file
+
+from src.ingestion.minio_client import upload_file, get_s3_client
 
 PASTA_TEMP = "data/raw/temp_cetic"
 os.makedirs(PASTA_TEMP, exist_ok=True)

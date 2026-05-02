@@ -6,8 +6,7 @@ import requests
 import urllib3
 from bs4 import BeautifulSoup
 
-from src.ingestion.minio_client import upload_file
-
+from src.ingestion.minio_client import upload_file, get_s3_client
 # =========================
 # CONFIG
 # =========================
@@ -148,11 +147,28 @@ def limpar():
 # PIPELINE PRINCIPAL
 # =========================
 def run_pipeline(bucket="raw"):
-    print("🚀 CENSO ESCOLAR PIPELINE")
+    print("🚀 [SCRAPING] Iniciando Censo Escolar")
 
+    # 1. Detecta qual é o link e ano mais recente no site do INEP
     ano, link = pegar_link()
-    print(f"📅 Ano detectado: {ano}")
+    print(f"📅 Ano detectado no portal: {ano}")
 
+    # 2. VERIFICAÇÃO DE EXISTÊNCIA NO MINIO
+    s3 = get_s3_client()
+    prefixo = f"censo_escolar/{ano}/"
+    
+    try:
+        # Verifica se já existe qualquer arquivo dentro da pasta do ano
+        response = s3.list_objects_v2(Bucket=bucket, Prefix=prefixo, MaxKeys=1)
+        
+        if 'Contents' in response:
+            print(f"✅ Dados do Censo {ano} já encontrados no MinIO. Pulando download.")
+            return # <--- Finaliza aqui e não executa o resto
+            
+    except Exception as e:
+        print(f"⚠️ Erro ao verificar MinIO: {e}. Tentando download por segurança...")
+
+    # 3. EXECUÇÃO NORMAL (Só ocorre se o 'return' acima não for acionado)
     zip_path = baixar_zip(link, ano)
 
     arquivos = extrair_arquivos(zip_path)
@@ -163,9 +179,5 @@ def run_pipeline(bucket="raw"):
 
     print("✅ PIPELINE FINALIZADO COM SUCESSO")
 
-
-# =========================
-# EXECUÇÃO
-# =========================
 if __name__ == "__main__":
     run_pipeline()
