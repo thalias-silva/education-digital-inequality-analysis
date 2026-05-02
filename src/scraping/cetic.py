@@ -70,7 +70,24 @@ def limpar():
 
 def run_pipeline(pesquisa, ano, unidade, bucket="raw"):
     print(f"🚀 CETIC {pesquisa} {ano}")
+    # ---  LÓGICA DE VERIFICAÇÃO VALIDA DE OS ARQUIVOS JÁ EXISTEM---
+    s3 = get_s3_client()
+    prefixo = f"cetic/{pesquisa}/{ano}/"
+    
+    try:
+        # Lista os objetos na pasta específica do MinIO
+        response = s3.list_objects_v2(Bucket=bucket, Prefix=prefixo)
+        
+        # Se 'Contents' existir, significa que já há arquivos lá
+        if 'Contents' in response:
+            print(f"✅ Dados de {pesquisa} {ano} já existem no bucket '{bucket}'. Pulando download.")
+            return # Sai da função sem rodar o resto
+            
+    except Exception as e:
+        print(f"⚠️ Erro ao verificar MinIO: {e}. Tentando baixar por segurança.")
+    # ----------------------------------
 
+    # Se não existir, segue o fluxo normal:
     link = buscar_link(pesquisa, ano, unidade)
     zip_path = baixar_zip(link, f"{pesquisa}_{ano}")
 
