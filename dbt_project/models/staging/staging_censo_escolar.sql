@@ -1,0 +1,1 @@
+SELECT * FROM {{ source("minio_raw", "censo_trusted_parquet") }}
