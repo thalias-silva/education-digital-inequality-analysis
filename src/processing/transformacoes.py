@@ -1,38 +1,9 @@
-# from src.utils.database import get_duckdb_connection
-
-# def processar_censo_escolar():
-#     con = get_duckdb_connection()
-#     print("⏳ Iniciando transformações no DuckDB...")
-
-#     con.execute("""
-#     CREATE OR REPLACE TABLE censo_trusted AS
-#     WITH escola AS (
-#         SELECT CO_ENTIDADE, NU_ANO_CENSO, SG_UF, NO_MUNICIPIO, TP_DEPENDENCIA, 
-#                TP_LOCALIZACAO, IN_INTERNET, IN_INTERNET_ALUNOS, IN_BANDA_LARGA, IN_COMPUTADOR,
-#                 IN_INTERNET_APRENDIZAGEM, IN_INTERNET_COMUNIDADE, IN_LABORATORIO_INFORMATICA, 
-#                QT_DESKTOP_ALUNO, QT_COMP_PORTATIL_ALUNO, QT_TABLET_ALUNO
-#         FROM read_csv_auto('s3://raw/censo_escolar/2025/escola*.csv', delim=';', header=True, encoding='latin-1')
-#     ),
-#     matricula AS (
-#         SELECT CO_ENTIDADE, QT_MAT_BAS, QT_MAT_FUND, QT_MAT_MED
-#         FROM read_csv_auto('s3://raw/censo_escolar/2025/matricula*.csv', delim=';', header=True, encoding='latin-1')
-#     ),
-#     docente AS (
-#         SELECT CO_ENTIDADE, QT_DOC_BAS, QT_DOC_BAS_DISC_INFO_COMPUTACAO
-#         FROM read_csv_auto('s3://raw/censo_escolar/2025/docente*.csv', delim=';', header=True, encoding='latin-1')
-#     )
-#     SELECT e.*, m.QT_MAT_BAS, d.QT_DOC_BAS, d.QT_DOC_BAS_DISC_INFO_COMPUTACAO
-#     FROM escola e
-#     LEFT JOIN matricula m USING (CO_ENTIDADE)
-#     LEFT JOIN docente d USING (CO_ENTIDADE);
-#     """)
-
-#     print("✅ Transformação finalizada!")
-#     return con
 import pandas as pd
 import io
 import os
 import re
+
+from openpyxl import load_workbook
 from src.utils.database import get_duckdb_connection
 from src.ingestion.minio_client import get_s3_client, upload_file
 
@@ -80,22 +51,26 @@ def processar_censo_escolar():
 
         con.execute(f"""
         CREATE OR REPLACE TABLE censo_trusted AS
+        
         WITH escola AS (
-            SELECT CO_ENTIDADE, NU_ANO_CENSO, SG_UF, NO_MUNICIPIO, TP_DEPENDENCIA, 
+            SELECT CO_ENTIDADE, NU_ANO_CENSO, SG_UF, NO_MUNICIPIO, NO_REGIAO, TP_DEPENDENCIA, 
                    TP_LOCALIZACAO, IN_INTERNET, IN_INTERNET_ALUNOS, IN_BANDA_LARGA, IN_COMPUTADOR,
-                   IN_INTERNET_APRENDIZAGEM, IN_INTERNET_COMUNIDADE, IN_LABORATORIO_INFORMATICA, 
-                   QT_DESKTOP_ALUNO, QT_COMP_PORTATIL_ALUNO, QT_TABLET_ALUNO
+                   IN_ACESSO_INTERNET_COMPUTADOR, IN_INTERNET_APRENDIZAGEM, IN_INTERNET_COMUNIDADE, 
+                   IN_LABORATORIO_INFORMATICA, IN_DESKTOP_ALUNO,QT_DESKTOP_ALUNO,
+                    IN_COMP_PORTATIL_ALUNO, QT_COMP_PORTATIL_ALUNO,IN_TABLET_ALUNO,QT_TABLET_ALUNO,
             FROM read_csv_auto('{local_dir}/escola_2025.csv', delim=';', header=True, encoding='latin-1')
         ),
         matricula AS (
-            SELECT CO_ENTIDADE, QT_MAT_BAS, QT_MAT_FUND, QT_MAT_MED
+            SELECT CO_ENTIDADE, QT_MAT_BAS, QT_MAT_FUND, QT_MAT_MED, QT_MAT_BAS_FEM, QT_MAT_BAS_MASC,   
+            QT_MAT_BAS_ND, QT_MAT_BAS_BRANCA, QT_MAT_BAS_PRETA, QT_MAT_BAS_PARDA, QT_MAT_BAS_AMARELA, 
+            QT_MAT_BAS_INDIGENA, QT_MAT_ZR_URB, QT_MAT_ZR_RUR
             FROM read_csv_auto('{local_dir}/matricula_2025.csv', delim=';', header=True, encoding='latin-1')
         ),
         docente AS (
-            SELECT CO_ENTIDADE, QT_DOC_BAS, QT_DOC_BAS_DISC_INFO_COMPUTACAO
+            SELECT CO_ENTIDADE, QT_DOC_BAS, QT_DOC_BAS_DISC_INFO_COMPUTACAO, QT_DOC_BAS_ESPEC_EDUC_TIC
             FROM read_csv_auto('{local_dir}/docente_2025.csv', delim=';', header=True, encoding='latin-1')
         )
-        SELECT e.*, m.QT_MAT_BAS, d.QT_DOC_BAS, d.QT_DOC_BAS_DISC_INFO_COMPUTACAO
+        SELECT e.*, m.* EXCLUDE (CO_ENTIDADE), d.* EXCLUDE (CO_ENTIDADE) 
         FROM escola e
         LEFT JOIN matricula m USING (CO_ENTIDADE)
         LEFT JOIN docente d USING (CO_ENTIDADE);
@@ -117,77 +92,126 @@ def processar_censo_escolar():
 # ==========================================
 # 2. TRANSFORMAÇÃO CETIC (PANDAS + MINIO)
 # ==========================================
+
 def tratar_planilha_cetic(caminho_raw, pesquisa, ano):
-    """
-    Resolve o problema de células mescladas, filtra abas e renomeia
-    tabelas extraindo o título após o hífen.
-    """
+    import io
+    import os
+    import re
+    import pandas as pd
+
     s3 = get_s3_client()
     bucket_raw = "raw"
+    bucket_refined = "refined"
+
     bucket_trusted = "trusted"
-    
+
     filtro_atual = FILTRO_DOMICILIOS if pesquisa == "domicilios" else FILTRO_ALUNOS
-    
+
     print(f"📡 Processando CETIC: {caminho_raw}")
-    
+
     obj = s3.get_object(Bucket=bucket_raw, Key=caminho_raw)
-    conteudo = io.BytesIO(obj['Body'].read())
-    
-    abas = pd.read_excel(conteudo, sheet_name=None, header=None)
-    
+    conteudo = io.BytesIO(obj["Body"].read())
+
+    abas = pd.read_excel(
+        conteudo,
+        sheet_name=None,
+        header=None,
+        engine="openpyxl"
+    )
+
     for nome_aba, df in abas.items():
-        codigo_aba = nome_aba.strip().upper()
-        
-        # Filtro seletivo baseado na lista de interesse do TCC
-        if not any(codigo == codigo_aba for codigo in filtro_atual):
+        codigo_aba = str(nome_aba).strip().upper()
+
+        if codigo_aba not in filtro_atual:
             continue
 
-        if df.empty or len(df.columns) < 3: 
+        if df.empty or df.shape[1] < 3:
+            print(f"⚠️ Aba {nome_aba} ignorada: estrutura insuficiente.")
             continue
-        
+
         try:
-            # --- TRATAMENTO DO TÍTULO (PÓS-HÍFEN) ---
-            titulo_bruto = str(df.iloc[0, 0])
+            df = df.copy()
+
+            df.iloc[:, 0] = df.iloc[:, 0].ffill()
+            if df.shape[1] > 1:
+                df.iloc[:, 1] = df.iloc[:, 1].ffill()
+
+            titulo_bruto = str(df.iloc[0, 0]).strip()
             tema_tabela = titulo_bruto.split(" - ", 1)[1] if " - " in titulo_bruto else titulo_bruto
-            
+
             nome_limpo = re.sub(r'[\\/*?:"<>|]', "", tema_tabela).strip().lower()
-            nome_arquivo_csv = nome_limpo.replace(" ", "_").replace(",", "")[:60] + ".csv"
+            nome_limpo = re.sub(r"\s+", "_", nome_limpo)
+            nome_limpo = nome_limpo.replace(",", "").replace(";", "")
+            nome_base = f"{codigo_aba.lower()}_{nome_limpo[:80]}"
 
-            # --- ESTRUTURAÇÃO ---
-            colunas_respostas = df.iloc[2, 2:].dropna().tolist()
-            df.columns = ['Categoria', 'Subcategoria'] + colunas_respostas
-            
-            idx_total = df[df['Categoria'].astype(str).str.contains('TOTAL', na=False, case=False)].index[0]
-            df_dados = df.iloc[idx_total:].reset_index(drop=True)
-            
-            # --- RESOLVENDO CÉLULAS MESCLADAS (FFILL) ---
-            df_dados['Categoria'] = df_dados['Categoria'].ffill()
-            
-            # --- MELT PARA FORMATO LONG ---
+            header_idx = 2
+            if len(df) <= header_idx:
+                print(f"⚠️ Aba {nome_aba} ignorada: sem cabeçalho esperado.")
+                continue
+
+            cabecalho = df.iloc[header_idx].tolist()
+            colunas = ["Categoria", "Subcategoria"] + [
+                str(x).strip() if pd.notna(x) else f"col_{i}"
+                for i, x in enumerate(cabecalho[2:], start=3)
+            ]
+
+            df_dados = df.iloc[header_idx + 1:].reset_index(drop=True).copy()
+
+            if df_dados.shape[1] < len(colunas):
+                for _ in range(len(colunas) - df_dados.shape[1]):
+                    df_dados[df_dados.shape[1]] = None
+
+            df_dados = df_dados.iloc[:, :len(colunas)]
+            df_dados.columns = colunas
+            df_dados = df_dados.dropna(how="all")
+
+            df_dados["Categoria"] = df_dados["Categoria"].ffill()
+            df_dados["Subcategoria"] = df_dados["Subcategoria"].ffill()
+
+            df_dados = df_dados[
+                ~df_dados["Categoria"].astype(str).str.contains("Fonte:", case=False, na=False)
+            ]
+
+            colunas_valor = [c for c in df_dados.columns if c not in ["Categoria", "Subcategoria"]]
+            df_dados = df_dados.dropna(subset=colunas_valor, how="all")
+
             df_longo = df_dados.melt(
-                id_vars=['Categoria', 'Subcategoria'],
-                var_name='Indicador',
-                value_name='Total'
+                id_vars=["Categoria", "Subcategoria"],
+                var_name="Indicador",
+                value_name="Total"
             )
-            
-            # Limpeza Numérica Brasil -> Computacional
-            df_longo['Total'] = pd.to_numeric(
-                df_longo['Total'].astype(str).str.replace('.', '').str.replace(',', '.'), 
-                errors='coerce'
-            )
-            df_longo = df_longo.dropna(subset=['Total'])
 
-            # --- PERSISTÊNCIA NA TRUSTED ---
-            temp_path = f"temp_{codigo_aba}.csv"
-            df_longo.to_csv(temp_path, index=False, sep=";")
-            
-            destino_s3 = f"cetic/{pesquisa}/{ano}/{nome_arquivo_csv}"
-            upload_file(temp_path, bucket_trusted, destino_s3)
-            
-            if os.path.exists(temp_path):
-                os.remove(temp_path)
-            
-            print(f"✅ Aba {codigo_aba} -> {nome_arquivo_csv}")
+            for col in ["Categoria", "Subcategoria", "Indicador"]:
+                df_longo[col] = df_longo[col].astype(str).str.strip()
+
+            df_longo["Total"] = (
+                df_longo["Total"]
+                .astype(str)
+                .str.strip()
+                .str.replace(".", "", regex=False)
+                .str.replace(",", ".", regex=False)
+            )
+            df_longo["Total"] = pd.to_numeric(df_longo["Total"], errors="coerce")
+            df_longo = df_longo.dropna(subset=["Total"])
+
+            temp_csv = f"temp_{nome_base}.csv"
+            temp_parquet = f"temp_{nome_base}.parquet"
+
+            df_longo.to_csv(temp_csv, index=False, sep=";", encoding="utf-8-sig")
+            df_longo.to_parquet(temp_parquet, index=False)
+
+            destino_csv = f"cetic/{pesquisa}/{ano}/{nome_base}.csv"
+            destino_parquet = f"cetic/{pesquisa}/{ano}/{nome_base}.parquet"
+
+            upload_file(temp_csv, bucket_trusted, destino_csv)
+            upload_file(temp_parquet, bucket_trusted, destino_parquet)
+
+            if os.path.exists(temp_csv):
+                os.remove(temp_csv)
+            if os.path.exists(temp_parquet):
+                os.remove(temp_parquet)
+
+            print(f"✅ Aba {codigo_aba} processada: {nome_base}")
 
         except Exception as e:
             print(f"⚠️ Erro na aba {nome_aba}: {e}")
