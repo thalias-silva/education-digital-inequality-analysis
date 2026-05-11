@@ -6,7 +6,20 @@ import re
 from openpyxl import load_workbook
 from src.utils.database import get_duckdb_connection
 from src.ingestion.minio_client import get_s3_client, upload_file
+# ==========================================
+# DOCUMENTAÇÃO DA CAMADA TRUSTED
+# ==========================================
+"""
+CAMADA TRUSTED - REGRA DE RESPONSABILIDADE:
+- Limpeza de dados (nulos, encoding, duplicatas)
+- Padronização de tipos e formatos numéricos
+- Junção de tabelas relacionadas
+- Tratamento de erros de cast e arquivos malformados
+- NÃO faz: tradução de códigos, regras de negócio, métricas derivadas
 
+Esta camada recebe dados raw do MinIO e produz tabelas 
+limpas e padronizadas para consumo na camada staging do dbt.
+"""
 # ==========================================
 # CONFIGURAÇÕES DE FILTRO (MAPEAMENTO INTELIGENTE)
 # ==========================================
@@ -29,6 +42,11 @@ def processar_censo_escolar():
     """
     Consolida microdados do Censo baixando arquivos localmente para evitar
     erros de cast do DuckDB (HTTPFS) em arquivos volumosos.
+    Trusted Layer: Junta escola + matrícula + docente do Censo Escolar 2025.
+    - Trata encoding latin-1
+    - Download local para evitar HTTPFS errors
+    - Seleciona apenas variáveis relevantes para SMED
+    - NÃO traduz códigos (isso fica na refined)
     """
     con = get_duckdb_connection()
     s3_client = get_s3_client()
@@ -53,21 +71,24 @@ def processar_censo_escolar():
         CREATE OR REPLACE TABLE censo_trusted AS
         
         WITH escola AS (
-            SELECT CO_ENTIDADE, NU_ANO_CENSO, SG_UF, NO_MUNICIPIO, NO_REGIAO, TP_DEPENDENCIA, 
-                   TP_LOCALIZACAO, IN_INTERNET, IN_INTERNET_ALUNOS, IN_BANDA_LARGA, IN_COMPUTADOR,
-                   IN_ACESSO_INTERNET_COMPUTADOR, IN_INTERNET_APRENDIZAGEM, IN_INTERNET_COMUNIDADE, 
-                   IN_LABORATORIO_INFORMATICA, IN_DESKTOP_ALUNO,QT_DESKTOP_ALUNO,
-                    IN_COMP_PORTATIL_ALUNO, QT_COMP_PORTATIL_ALUNO,IN_TABLET_ALUNO,QT_TABLET_ALUNO,
+            SELECT CO_ENTIDADE, NU_ANO_CENSO, SG_UF, NO_MUNICIPIO, NO_REGIAO, TP_DEPENDENCIA,
+                TP_SITUACAO_FUNCIONAMENTO, TP_LOCALIZACAO, IN_INTERNET, IN_INTERNET_ALUNOS, IN_BANDA_LARGA, 
+                IN_EQUIP_LOUSA_DIGITAL, QT_EQUIP_LOUSA_DIGITAL, IN_COMPUTADOR, IN_ACESSO_INTERNET_COMPUTADOR, IN_INTERNET_APRENDIZAGEM, 
+                IN_INTERNET_COMUNIDADE, IN_LABORATORIO_INFORMATICA, IN_DESKTOP_ALUNO,QT_DESKTOP_ALUNO,
+                IN_COMP_PORTATIL_ALUNO, QT_COMP_PORTATIL_ALUNO,IN_TABLET_ALUNO,QT_TABLET_ALUNO
             FROM read_csv_auto('{local_dir}/escola_2025.csv', delim=';', header=True, encoding='latin-1')
         ),
         matricula AS (
-            SELECT CO_ENTIDADE, QT_MAT_BAS, QT_MAT_FUND, QT_MAT_MED, QT_MAT_BAS_FEM, QT_MAT_BAS_MASC,   
-            QT_MAT_BAS_ND, QT_MAT_BAS_BRANCA, QT_MAT_BAS_PRETA, QT_MAT_BAS_PARDA, QT_MAT_BAS_AMARELA, 
-            QT_MAT_BAS_INDIGENA, QT_MAT_ZR_URB, QT_MAT_ZR_RUR
+            SELECT CO_ENTIDADE, QT_MAT_BAS,  QT_MAT_BAS_D, QT_MAT_BAS_N,
+                QT_MAT_FUND, QT_MAT_FUND_D, QT_MAT_FUND_N, QT_MAT_MED, QT_MAT_MED_D, QT_MAT_MED_N,
+                QT_MAT_BAS_FEM, QT_MAT_BAS_MASC,   
+                QT_MAT_BAS_ND, QT_MAT_BAS_BRANCA, QT_MAT_BAS_PRETA, QT_MAT_BAS_PARDA, QT_MAT_BAS_AMARELA, 
+                QT_MAT_BAS_INDIGENA, QT_MAT_ZR_URB, QT_MAT_ZR_RUR
             FROM read_csv_auto('{local_dir}/matricula_2025.csv', delim=';', header=True, encoding='latin-1')
         ),
         docente AS (
-            SELECT CO_ENTIDADE, QT_DOC_BAS, QT_DOC_BAS_DISC_INFO_COMPUTACAO, QT_DOC_BAS_ESPEC_EDUC_TIC
+            SELECT CO_ENTIDADE, QT_DOC_BAS, QT_DOC_MED, QT_DOC_FUND,
+                QT_DOC_BAS_DISC_INFO_COMPUTACAO, QT_DOC_BAS_ESPEC_EDUC_TIC
             FROM read_csv_auto('{local_dir}/docente_2025.csv', delim=';', header=True, encoding='latin-1')
         )
         SELECT e.*, m.* EXCLUDE (CO_ENTIDADE), d.* EXCLUDE (CO_ENTIDADE) 
