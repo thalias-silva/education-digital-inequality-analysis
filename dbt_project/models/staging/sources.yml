@@ -5,5 +5,5 @@ sources:
     loader: duckdb
     tables:
       - name: censo_trusted_parquet
-        config:
+        meta:
           external_location: "s3://trusted/censo_escolar/censo_trusted.parquet"
