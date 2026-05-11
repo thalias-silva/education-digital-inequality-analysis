@@ -281,4 +281,5 @@ spark-warehouse/
 # For SBT
 .jvmopts
 teste_spark.py
+helpers.py
 # End of https://www.toptal.com/developers/gitignore/api/python,dbt,spark
