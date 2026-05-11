@@ -1,0 +1,37 @@
+Categoria;Variavel dbt (Refined);Nome Original (INEP);Descricao;Regra de Negocio;Peso SMED
+Identificacao;CO_ENTIDADE;CO_ENTIDADE;ID da Escola;Chave Primaria;N/A
+Identificacao;NU_ANO_CENSO;NU_ANO_CENSO;Ano de Referencia;Censo Escolar 2024;N/A
+Identificacao;SG_UF;SG_UF;Estado;Sigla da UF;N/A
+Identificacao;NO_MUNICIPIO;NO_MUNICIPIO;Municipio;Nome da Cidade;N/A
+Identificacao;NO_REGIAO;NO_REGIAO;Regiao;Regiao Geografica;N/A
+Identificacao;dependencia_adm;TP_DEPENDENCIA;Rede de Ensino;Traducao: 1,2,3=Publica | 4=Privada;13%
+Identificacao;localizacao;TP_LOCALIZACAO;Zona da Escola;Traducao: 1=Urbana, 2=Rural;N/A
+Pilar 1: Acesso;possui_internet;IN_INTERNET;Internet na escola;Traducao via labels_sim_nao;30%
+Pilar 1: Acesso;internet_alunos;IN_INTERNET_ALUNOS;Internet para Alunos;Traducao via labels_sim_nao;Comp. Acesso
+Pilar 1: Acesso;possui_banda_larga;IN_BANDA_LARGA;Internet Banda Larga;Traducao via labels_sim_nao;Comp. Acesso
+Pilar 1: Acesso;acesso_internet_computador;IN_ACESSO_INTERNET_COMPUTADOR;Internet via PC;Traducao via labels_sim_nao;Comp. Acesso
+Pilar 1: Acesso;internet_aprendizagem;IN_INTERNET_APRENDIZAGEM;Uso Pedagogico;Traducao via labels_sim_nao;Comp. Acesso
+Pilar 1: Acesso;internet_comunidade;IN_INTERNET_COMUNIDADE;Uso pela Comunidade;Traducao via labels_sim_nao;Comp. Acesso
+Pilar 2: Dispositivos;densidade_pcs;(QT_DESKTOP_ALUNO + QT_COMP_PORTATIL_ALUNO + QT_TABLET_ALUNO) / QT_MAT_BAS;Densidade;Calculo de PCs totais por aluno;32%
+Pilar 2: Dispositivos;possui_computador;IN_COMPUTADOR;Presenca de PCs;Traducao via labels_sim_nao;Comp. Disp
+Pilar 2: Dispositivos;possui_desktop_aluno;IN_DESKTOP_ALUNO;PCs Desktop;Traducao via labels_sim_nao;Comp. Disp
+Pilar 2: Dispositivos;possui_portatil_aluno;IN_COMP_PORTATIL_ALUNO;Notebooks;Traducao via labels_sim_nao;Comp. Disp
+Pilar 2: Dispositivos;possui_tablet_aluno;IN_TABLET_ALUNO;Tablets;Traducao via labels_sim_nao;Comp. Disp
+Pilar 3: Infraestrutura;laboratorio_informatica;IN_LABORATORIO_INFORMATICA;Laboratorio de Info;Traducao via labels_sim_nao;25%
+Demografia;QT_MAT_BAS;QT_MAT_BAS;Total de Matriculas;Base para calculo de densidade;N/A
+Demografia;QT_MAT_FUND;QT_MAT_FUND;Matriculas Fundamental;Analise por etapa;N/A
+Demografia;QT_MAT_MED;QT_MAT_MED;Matriculas Ensino Medio;Analise por etapa;N/A
+Demografia;QT_MAT_BAS_FEM;QT_MAT_BAS_FEM;Alunas Mulheres;Analise de Genero;N/A
+Demografia;QT_MAT_BAS_MASC;QT_MAT_BAS_MASC;Alunos Homens;Analise de Genero;N/A
+Demografia;QT_MAT_BAS_ND;QT_MAT_BAS_ND;Raca Nao Declarada;Analise Etnico-Racial;N/A
+Demografia;QT_MAT_BAS_BRANCA;QT_MAT_BAS_BRANCA;Alunos Brancos;Analise Etnico-Racial;N/A
+Demografia;QT_MAT_BAS_PRETA;QT_MAT_BAS_PRETA;Alunos Pretos;Analise Etnico-Racial;N/A
+Demografia;QT_MAT_BAS_PARDA;QT_MAT_BAS_PARDA;Alunos Pardos;Analise Etnico-Racial;N/A
+Demografia;QT_MAT_BAS_AMARELA;QT_MAT_BAS_AMARELA;Alunos Amarelos;Analise Etnico-Racial;N/A
+Demografia;QT_MAT_BAS_INDIGENA;QT_MAT_BAS_INDIGENA;Alunos Indigenas;Analise Etnico-Racial;N/A
+Geografia;QT_MAT_ZR_URB;QT_MAT_ZR_URB;Matriculas Urbana;Analise de Localizacao;N/A
+Geografia;QT_MAT_ZR_RUR;QT_MAT_ZR_RUR;Matriculas Rural;Analise de Localizacao;N/A
+Corpo Docente;QT_DOC_BAS;QT_DOC_BAS;Total de Docentes;Base para mediacao;N/A
+Corpo Docente;QT_DOC_BAS_DISC_INFO;QT_DOC_BAS_DISC_INFO_COMPUTACAO;Docentes Informatica;Proxy Letramento Digital;N/A
+Corpo Docente;QT_DOC_BAS_ESPEC_TIC;QT_DOC_BAS_ESPEC_EDUC_TIC;Docentes Especialistas;Proxy Letramento Digital;N/A
+Qualidade;escola_ativa;TP_SITUACAO_FUNCIONAMENTO;Situacao;Filtro: Manter apenas valor 1 (em atividade);N/A
