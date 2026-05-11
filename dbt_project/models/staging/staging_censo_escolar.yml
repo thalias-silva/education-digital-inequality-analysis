@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: staging_censo_escolar
+    description: >
+      Esta tabela processa os microdados brutos do Censo Escolar (camada Trusted). 
+      Ela serve como a base para o cálculo do SMED (Score de Mudança e Exclusão Digital).
+    columns:
+      - name: CO_ENTIDADE
+        description: "ID único da escola (Chave Primária). Essencial para o join com os dados da CETIC."
+        tests:
+          - unique
+          - not_null
+
+      - name: IN_INTERNET
+        description: "Indica a presença de internet na escola. Original: 0 (Não), 1 (Sim). 9 (Não sabe)"
+        # Aqui você está documentando a regra que o dbt vai validar
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+      - name: QT_DESKTOP_ALUNO
+        description: "Quantidade de computadores desktop disponíveis para os alunos. Variável de peso no pilar de Equipamentos."
