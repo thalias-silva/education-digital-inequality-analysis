@@ -37,18 +37,20 @@ WITH dados_brutos AS (
         CASE 
             WHEN (c.IN_INTERNET_APRENDIZAGEM = 1 OR c.IN_INTERNET_ALUNOS = 1) 
                 AND (c.QT_DESKTOP_ALUNO > 0 OR c.QT_COMP_PORTATIL_ALUNO > 0 OR c.QT_TABLET_ALUNO > 0 OR c.QT_EQUIP_LOUSA_DIGITAL > 0)
-            THEN 'Conectividade Pedagógica Plena'
+            THEN 'Conectividade Pedagogica Plena'
 
             WHEN (c.IN_INTERNET_APRENDIZAGEM = 1 OR c.IN_INTERNET_ALUNOS = 1) 
                 AND (COALESCE(c.QT_DESKTOP_ALUNO, 0) + COALESCE(c.QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(c.QT_TABLET_ALUNO, 0) + COALESCE(c.QT_EQUIP_LOUSA_DIGITAL, 0) = 0)
-            THEN 'Conexão Sem Dispositivos'
+            THEN 'Conexao Sem Dispositivos'
 
             WHEN c.IN_INTERNET = 1 
                 AND c.IN_INTERNET_APRENDIZAGEM = 0 
                 AND c.IN_INTERNET_ALUNOS = 0
             THEN 'Internet Apenas Administrativa'
 
-            ELSE 'Sem Conectividade'
+            WHEN c.IN_INTERNET = 0 THEN 'Sem Conectividade'
+
+            ELSE 'Conectividade e Uso Tecnologico Indefinidos'
         END AS perfil_uso_tecnologico,
 
         -- Métricas Quantitativas (Todas que você listou)
@@ -99,14 +101,41 @@ SELECT
     *,
         -- Foco ALUNOS do Fundamental + Médio
     (COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)) AS matricula_fund_med,
+    ROUND((COALESCE(QT_MAT_FUND_D, 0) + COALESCE(QT_MAT_MED_D, 0)) * 100.0 / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0), 2) AS pct_alunos_diurno,
+    ROUND((COALESCE(QT_MAT_FUND_N, 0) + COALESCE(QT_MAT_MED_N, 0)) * 100.0 / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0), 2) AS pct_alunos_noturno,
+    ROUND((COALESCE(QT_MAT_FUND, 0) * 100.0 / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0)), 2) AS pct_alunos_fund,
+    ROUND((COALESCE(QT_MAT_MED, 0) * 100.0 / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0)), 2) AS pct_alunos_medio,
          -- Foco DOCENTE/PROFESSOR do Fundamental + Médio
     (COALESCE(QT_DOC_MED, 0) + COALESCE(QT_DOC_FUND, 0)) AS docente_fund_med,
+    -- dados de docentes são por escola, não temos a distribuição por turno, então não conseguimos calcular o percentual de docentes por turno, mas podemos calcular o percentual de docentes do fund e médio em relação ao total de docentes
+    ROUND((COALESCE(QT_DOC_FUND, 0) * 100.0 / NULLIF((COALESCE(QT_DOC_MED, 0) + COALESCE(QT_DOC_FUND, 0)), 0)), 2) AS pct_docentes_fund,
+    ROUND((COALESCE(QT_DOC_MED, 0) * 100.0 / NULLIF((COALESCE(QT_DOC_MED, 0) + COALESCE(QT_DOC_FUND, 0)), 0)), 2) AS pct_docentes_med,  
+    -- PROPORÇÃO DE ALUNOS POR DOCENTE (Alunos do Fundamental + Médio por Docente do Fundamental + Médio)
+    ROUND((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)) * 1.0 / NULLIF((COALESCE(QT_DOC_FUND, 0) + COALESCE(QT_DOC_MED, 0)), 0), 2) AS proporcao_alunos_por_docente,
+    
+    ROUND((COALESCE(QT_MAT_BAS_PRETA, 0) + COALESCE(QT_MAT_BAS_PARDA, 0)) * 100.0 / NULLIF((COALESCE(QT_MAT_BAS, 0)), 0), 2) AS pct_alunos_brasil_preta_parda,
+
+    -- Quantidade dispositivos tecnológicos para alunos (somatório de desktop, portátil, tablet e lousa digital)
+    (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) AS total_dispositivos_aluno,
+    -- Densidade Real de PCs para o público-alvo (Alunos do Fundamental + Médio)
     ROUND(
         (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
         / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0), 2
     ) AS densidade_tecnologica_total,
-
-    ROUND((COALESCE(QT_MAT_FUND_D, 0) + COALESCE(QT_MAT_MED_D, 0)) * 100.0 / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0), 2) AS pct_alunos_diurno,
-    ROUND((COALESCE(QT_MAT_FUND_N, 0) + COALESCE(QT_MAT_MED_N, 0)) * 100.0 / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0), 2) AS pct_alunos_noturno
-
+    -- Densidade Real de PCs por turno (Alunos do Fundamental + Médio)
+    ROUND(
+        (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
+        / NULLIF((COALESCE(QT_MAT_FUND_D, 0) + COALESCE(QT_MAT_MED_D, 0)), 0), 2
+    ) AS densidade_tecnologica_diurno,
+    ROUND(
+        (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
+        / NULLIF((COALESCE(QT_MAT_FUND_N, 0) + COALESCE(QT_MAT_MED_N, 0)), 0), 2
+    ) AS densidade_tecnologica_noturno,
+    -- percentual de densidade tecnologia por turno em relação à densidade total
+    ROUND(
+        (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
+        / NULLIF((COALESCE(QT_MAT_FUND, 0) + COALESCE(QT_MAT_MED, 0)), 0), 2
+    ) AS pct_densidade_tecnologica_total,
+            -- Métricas de Apoio (Ex: Proporção de Docentes/Professores Especialistas) -- não temos a qtd de docentes com educ_tic medio + fund, por esse motivo essa proporção é em proxy escola e não turma/turno
+    COALESCE(QT_DOC_BAS_ESPEC_EDUC_TIC, 0) / NULLIF(QT_DOC_BAS, 0) AS proporcao_docentes_especialista_tic
 FROM dados_brutos

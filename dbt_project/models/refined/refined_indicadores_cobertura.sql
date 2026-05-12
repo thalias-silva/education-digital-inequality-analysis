@@ -23,6 +23,6 @@ SELECT
     -- 6. Perfil de Uso Majoritário (A categoria mais frequente no grupo)
     MODE(perfil_uso_tecnologico) AS perfil_mais_comum
 
-FROM {{ ref('refined_censo_smed') }}
+FROM {{ ref('refined_censo_escolar') }}
 GROUP BY 1, 2
 ORDER BY SG_UF, dependencia_adm
