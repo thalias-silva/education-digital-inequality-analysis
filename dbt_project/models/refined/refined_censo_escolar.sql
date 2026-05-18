@@ -7,6 +7,7 @@ WITH dados_brutos AS (
         c.NU_ANO_CENSO,
         c.SG_UF,
         c.NO_MUNICIPIO,
+        c.CO_MUNICIPIO,
         c.NO_REGIAO,
         
         -- Tradução da Dependência e Localização
@@ -32,6 +33,7 @@ WITH dados_brutos AS (
         c.IN_INTERNET,
         c.IN_INTERNET_ALUNOS,
         c.IN_EQUIP_LOUSA_DIGITAL,
+        c.IN_INTERNET_APRENDIZAGEM,
 
         -- Lógica de Perfil de Uso Tecnológico
         CASE 
