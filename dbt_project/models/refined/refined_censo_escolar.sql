@@ -34,6 +34,7 @@ WITH dados_brutos AS (
         c.IN_INTERNET_ALUNOS,
         c.IN_EQUIP_LOUSA_DIGITAL,
         c.IN_INTERNET_APRENDIZAGEM,
+        c.IN_LABORATORIO_INFORMATICA,
 
         -- Lógica de Perfil de Uso Tecnológico
         CASE 
