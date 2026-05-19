@@ -14,10 +14,10 @@ models:
 
       - name: IN_INTERNET
         description: "Indica a presença de internet na escola. Original: 0 (Não), 1 (Sim). 9 (Não sabe)"
-        # Aqui você está documentando a regra que o dbt vai validar
         tests:
           - accepted_values:
-              values: [0, 1]
+              arguments:      # <--- Adicionado
+                values: [0, 1] # <--- Deslocado dois espaços para a direita
 
       - name: QT_DESKTOP_ALUNO
         description: "Quantidade de computadores desktop disponíveis para os alunos. Variável de peso no pilar de Equipamentos."

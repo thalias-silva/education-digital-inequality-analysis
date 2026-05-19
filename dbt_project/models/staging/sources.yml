@@ -1,3 +1,12 @@
+# version: 2
+
+# sources:
+#   - name: minio_raw
+#     loader: duckdb
+#     tables:
+#       - name: censo_trusted_parquet
+#         meta:
+#           external_location: "s3://trusted/censo_escolar/censo_trusted.parquet"
 version: 2
 
 sources:
@@ -5,5 +14,4 @@ sources:
     loader: duckdb
     tables:
       - name: censo_trusted_parquet
-        meta:
-          external_location: "s3://trusted/censo_escolar/censo_trusted.parquet"
+        # external: "s3://trusted/censo_escolar/censo_trusted.parquet"
