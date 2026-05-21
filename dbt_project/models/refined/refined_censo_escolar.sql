@@ -4,11 +4,13 @@ WITH dados_brutos AS (
     SELECT
         -- Identificação
         c.CO_ENTIDADE,
+        c.NO_ENTIDADE,
         c.NU_ANO_CENSO,
         c.SG_UF,
         c.NO_MUNICIPIO,
         c.CO_MUNICIPIO,
         c.NO_REGIAO,
+        c.NO_DISTRITO,
         
         -- Tradução da Dependência e Localização
         dep.descricao as dependencia_adm,
@@ -137,18 +139,6 @@ SELECT
         (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
         / NULLIF((COALESCE(QT_MAT_FUND_N, 0) + COALESCE(QT_MAT_MED_N, 0)), 0), 2
     ) AS densidade_tecnologica_noturno,
-    -- média densidade tecnológica por turno (para comparar a densidade tecnológica entre os turnos, já que a quantidade de alunos e docentes é diferente entre eles)
-    ROUND((
-        ROUND(
-        (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
-        / NULLIF((COALESCE(QT_MAT_FUND_D, 0) + COALESCE(QT_MAT_MED_D, 0)), 0),
-        2)
-        +
-        ROUND(
-        (COALESCE(QT_DESKTOP_ALUNO, 0) + COALESCE(QT_COMP_PORTATIL_ALUNO, 0) + COALESCE(QT_TABLET_ALUNO, 0) + COALESCE(QT_EQUIP_LOUSA_DIGITAL, 0)) * 100.0 
-        / NULLIF((COALESCE(QT_MAT_FUND_N, 0) + COALESCE(QT_MAT_MED_N, 0)), 0),
-        2)
-    ) / 2.0, 2) AS densidade_tecnologica_media_turnos,
             -- Métricas de Apoio (Ex: Proporção de Docentes/Professores Especialistas) -- não temos a qtd de docentes com educ_tic medio + fund, por esse motivo essa proporção é em proxy escola e não turma/turno
     COALESCE(QT_DOC_BAS_ESPEC_EDUC_TIC, 0) / NULLIF(QT_DOC_BAS, 0) AS proporcao_docentes_especialista_tic
 FROM dados_brutos
