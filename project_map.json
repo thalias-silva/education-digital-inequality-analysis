@@ -1,0 +1,600 @@
+{
+  "root": [
+    {
+      "name": "generate_pipeline_diagram.py",
+      "type": "python",
+      "path": "./generate_pipeline_diagram.py",
+      "docstring": null,
+      "content_insight": "processing layer"
+    },
+    {
+      "name": "lib",
+      "type": "file",
+      "path": "./lib",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": ".env",
+      "type": "file",
+      "path": "./.env",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "teste_minio.py",
+      "type": "python",
+      "path": "./teste_minio.py",
+      "docstring": null,
+      "content_insight": "storage / ingestion"
+    },
+    {
+      "name": "generate_readme_from_map.py",
+      "type": "python",
+      "path": "./generate_readme_from_map.py",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "project_introspector.py",
+      "type": "python",
+      "path": "./project_introspector.py",
+      "docstring": "Lê uma amostra do arquivo para análise leve de conteúdo",
+      "content_insight": "ingestion / scraping"
+    },
+    {
+      "name": "README.md",
+      "type": "documentation",
+      "path": "./README.md",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "figura_2_scree_plot.png",
+      "type": "file",
+      "path": "./figura_2_scree_plot.png",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "main.py",
+      "type": "python",
+      "path": "./main.py",
+      "docstring": null,
+      "content_insight": "ingestion / scraping"
+    },
+    {
+      "name": "book_variaveis_refined.xlsx",
+      "type": "file",
+      "path": "./book_variaveis_refined.xlsx",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "README_AUTOMATICO.md",
+      "type": "documentation",
+      "path": "./README_AUTOMATICO.md",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "estrutura_projeto.txt",
+      "type": "file",
+      "path": "./estrutura_projeto.txt",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "docker-compose.yml",
+      "type": "file",
+      "path": "./docker-compose.yml",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "requirements.txt",
+      "type": "file",
+      "path": "./requirements.txt",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "figura_4_boxplot_regional.png",
+      "type": "file",
+      "path": "./figura_4_boxplot_regional.png",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": ".gitignore",
+      "type": "file",
+      "path": "./.gitignore",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "setup.sh",
+      "type": "file",
+      "path": "./setup.sh",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "python3",
+      "type": "file",
+      "path": "./python3",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "figura_1_matriz_correlação.png",
+      "type": "file",
+      "path": "./figura_1_matriz_correlação.png",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "teste_spark.py",
+      "type": "python",
+      "path": "./teste_spark.py",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "figura_3_boxplot_redes.png",
+      "type": "file",
+      "path": "./figura_3_boxplot_redes.png",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "pesos_smed.png",
+      "type": "file",
+      "path": "./pesos_smed.png",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project": [
+    {
+      "name": "README.md",
+      "type": "documentation",
+      "path": "./dbt_project/README.md",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "dev.duckdb",
+      "type": "file",
+      "path": "./dbt_project/dev.duckdb",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "dbt_project.yml",
+      "type": "file",
+      "path": "./dbt_project/dbt_project.yml",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": ".gitignore",
+      "type": "file",
+      "path": "./dbt_project/.gitignore",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project/snapshots": [
+    {
+      "name": ".gitkeep",
+      "type": "file",
+      "path": "./dbt_project/snapshots/.gitkeep",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project/analyses": [
+    {
+      "name": ".gitkeep",
+      "type": "file",
+      "path": "./dbt_project/analyses/.gitkeep",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project/seeds": [
+    {
+      "name": "labels_sim_nao.csv",
+      "type": "file",
+      "path": "./dbt_project/seeds/labels_sim_nao.csv",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "labels_dependencia.csv",
+      "type": "file",
+      "path": "./dbt_project/seeds/labels_dependencia.csv",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": ".gitkeep",
+      "type": "file",
+      "path": "./dbt_project/seeds/.gitkeep",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "labels_localizacao.csv",
+      "type": "file",
+      "path": "./dbt_project/seeds/labels_localizacao.csv",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "idhm_municipios.csv",
+      "type": "file",
+      "path": "./dbt_project/seeds/idhm_municipios.csv",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project/tests": [
+    {
+      "name": ".gitkeep",
+      "type": "file",
+      "path": "./dbt_project/tests/.gitkeep",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project/models": [],
+  "dbt_project/models/staging": [
+    {
+      "name": "staging_censo_escolar.sql",
+      "type": "dbt_model",
+      "path": "./dbt_project/models/staging/staging_censo_escolar.sql",
+      "docstring": null,
+      "content_insight": "dbt - staging layer"
+    },
+    {
+      "name": "sources.yml",
+      "type": "file",
+      "path": "./dbt_project/models/staging/sources.yml",
+      "docstring": null,
+      "content_insight": "dbt - staging layer"
+    },
+    {
+      "name": "staging_cetic.sql",
+      "type": "dbt_model",
+      "path": "./dbt_project/models/staging/staging_cetic.sql",
+      "docstring": null,
+      "content_insight": "dbt - staging layer"
+    },
+    {
+      "name": "staging_censo_escolar.yml",
+      "type": "file",
+      "path": "./dbt_project/models/staging/staging_censo_escolar.yml",
+      "docstring": null,
+      "content_insight": "dbt - staging layer"
+    }
+  ],
+  "dbt_project/models/refined": [
+    {
+      "name": "refined_censo_vulnerabilidade.sql",
+      "type": "dbt_model",
+      "path": "./dbt_project/models/refined/refined_censo_vulnerabilidade.sql",
+      "docstring": null,
+      "content_insight": "dbt - refined layer"
+    },
+    {
+      "name": "refined_censo_escolar.sql",
+      "type": "dbt_model",
+      "path": "./dbt_project/models/refined/refined_censo_escolar.sql",
+      "docstring": null,
+      "content_insight": "dbt - refined layer"
+    },
+    {
+      "name": "refined_censo_smed_regiao.sql",
+      "type": "dbt_model",
+      "path": "./dbt_project/models/refined/refined_censo_smed_regiao.sql",
+      "docstring": null,
+      "content_insight": "dbt - refined layer"
+    },
+    {
+      "name": "refined_indicadores_cobertura.sql",
+      "type": "dbt_model",
+      "path": "./dbt_project/models/refined/refined_indicadores_cobertura.sql",
+      "docstring": null,
+      "content_insight": "dbt - refined layer"
+    }
+  ],
+  "dbt_project/data": [
+    {
+      "name": "censo_escolar.duckdb",
+      "type": "file",
+      "path": "./dbt_project/data/censo_escolar.duckdb",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dbt_project/macros": [
+    {
+      "name": ".gitkeep",
+      "type": "file",
+      "path": "./dbt_project/macros/.gitkeep",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "notebooks": [
+    {
+      "name": "01_eda.ipynb",
+      "type": "notebook",
+      "path": "./notebooks/01_eda.ipynb",
+      "docstring": null,
+      "content_insight": "analytics / exploration"
+    },
+    {
+      "name": "02_analise_exclusao.ipynb",
+      "type": "notebook",
+      "path": "./notebooks/02_analise_exclusao.ipynb",
+      "docstring": null,
+      "content_insight": "analytics / exploration"
+    }
+  ],
+  "data": [
+    {
+      "name": "exclusao_digital.duckdb",
+      "type": "file",
+      "path": "./data/exclusao_digital.duckdb",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "data/raw_data": [
+    {
+      "name": "._SUCCESS.crc",
+      "type": "file",
+      "path": "./data/raw_data/._SUCCESS.crc",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "_SUCCESS",
+      "type": "file",
+      "path": "./data/raw_data/_SUCCESS",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "data/raw_data/ano=2026": [],
+  "data/raw_data/ano=2026/mes=05": [
+    {
+      "name": ".part-00007-021cab63-25f5-43b8-ab99-8852b8c79024.c000.snappy.parquet.crc",
+      "type": "file",
+      "path": "./data/raw_data/ano=2026/mes=05/.part-00007-021cab63-25f5-43b8-ab99-8852b8c79024.c000.snappy.parquet.crc",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "part-00007-021cab63-25f5-43b8-ab99-8852b8c79024.c000.snappy.parquet",
+      "type": "file",
+      "path": "./data/raw_data/ano=2026/mes=05/part-00007-021cab63-25f5-43b8-ab99-8852b8c79024.c000.snappy.parquet",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "data/raw": [],
+  "data/raw/dados_mapa": [
+    {
+      "name": "IDHM.cpg",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.cpg",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.dbf",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.dbf",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.prj",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.prj",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.qpj",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.qpj",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.shp",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.shp",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.shx",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.shx",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.xlsx",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.xlsx",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "IDHM.xlsx:Zone.Identifier",
+      "type": "file",
+      "path": "./data/raw/dados_mapa/IDHM.xlsx:Zone.Identifier",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "data/raw/temp_censo": [],
+  "data/raw/temp_cetic": [],
+  "data/raw/censo_escolar": [],
+  "data/raw/censo_escolar/2025": [
+    {
+      "name": "docente_2025.csv",
+      "type": "file",
+      "path": "./data/raw/censo_escolar/2025/docente_2025.csv",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "escola_2025.csv",
+      "type": "file",
+      "path": "./data/raw/censo_escolar/2025/escola_2025.csv",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "matricula_2025.csv",
+      "type": "file",
+      "path": "./data/raw/censo_escolar/2025/matricula_2025.csv",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "data/raw/cetic": [],
+  "data/raw/cetic/domicilios": [],
+  "data/raw/cetic/domicilios/2025": [
+    {
+      "name": "tic_domicilios_2025_domicilios_tabela_total_v1.0.xlsx",
+      "type": "file",
+      "path": "./data/raw/cetic/domicilios/2025/tic_domicilios_2025_domicilios_tabela_total_v1.0.xlsx",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "data/raw/cetic/educacao": [],
+  "data/raw/cetic/educacao/2024": [
+    {
+      "name": "tic_educacao_2024_alunos_tabela_total_v1.0.xlsx",
+      "type": "file",
+      "path": "./data/raw/cetic/educacao/2024/tic_educacao_2024_alunos_tabela_total_v1.0.xlsx",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "dashboard": [],
+  "src": [
+    {
+      "name": "__init__.py",
+      "type": "python",
+      "path": "./src/__init__.py",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "src/scraping": [
+    {
+      "name": "cetic.py",
+      "type": "python",
+      "path": "./src/scraping/cetic.py",
+      "docstring": null,
+      "content_insight": "ingestion / scraping"
+    },
+    {
+      "name": "censo_escolar.py",
+      "type": "python",
+      "path": "./src/scraping/censo_escolar.py",
+      "docstring": null,
+      "content_insight": "ingestion / scraping"
+    }
+  ],
+  "src/ingestion": [
+    {
+      "name": "minio_client.py",
+      "type": "python",
+      "path": "./src/ingestion/minio_client.py",
+      "docstring": "Envia arquivos locais para o MinIO. \n    Usado pelos scripts de scraping do Censo e CETIC.",
+      "content_insight": "ingestion / scraping"
+    }
+  ],
+  "src/utils": [
+    {
+      "name": "database.py",
+      "type": "python",
+      "path": "./src/utils/database.py",
+      "docstring": null,
+      "content_insight": "ingestion / scraping"
+    },
+    {
+      "name": "__init__.py",
+      "type": "python",
+      "path": "./src/utils/__init__.py",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "src/processing": [
+    {
+      "name": "transformacoes.py",
+      "type": "python",
+      "path": "./src/processing/transformacoes.py",
+      "docstring": "CAMADA TRUSTED - REGRA DE RESPONSABILIDADE:\n- Limpeza de dados (nulos, encoding, duplicatas)\n- Padronização de tipos e formatos numéricos\n- Junção de tabelas relacionadas\n- Tratamento de erros de cast e arquivos malformados\n- NÃO faz: tradução de códigos, regras de negócio, métricas derivadas\n\nEsta camada recebe dados raw do MinIO e produz tabelas \nlimpas e padronizadas para consumo na camada staging do dbt.",
+      "content_insight": "ingestion / scraping"
+    },
+    {
+      "name": "pipeline.py",
+      "type": "python",
+      "path": "./src/processing/pipeline.py",
+      "docstring": "Orquestra a transformação e validação de todas as fontes de dados (Censo e CETIC).",
+      "content_insight": "storage / ingestion"
+    },
+    {
+      "name": "validacao.py",
+      "type": "python",
+      "path": "./src/processing/validacao.py",
+      "docstring": "Valida a integridade dos microdados processados pelo DuckDB.",
+      "content_insight": "storage / ingestion"
+    },
+    {
+      "name": "__init__.py",
+      "type": "python",
+      "path": "./src/processing/__init__.py",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "docs": [
+    {
+      "name": "metodologia_smed.md",
+      "type": "documentation",
+      "path": "./docs/metodologia_smed.md",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "dicionario_dados.md",
+      "type": "documentation",
+      "path": "./docs/dicionario_dados.md",
+      "docstring": null,
+      "content_insight": "other"
+    },
+    {
+      "name": "book_de_variaveis.csv",
+      "type": "file",
+      "path": "./docs/book_de_variaveis.csv",
+      "docstring": null,
+      "content_insight": "other"
+    }
+  ],
+  "maps": []
+}

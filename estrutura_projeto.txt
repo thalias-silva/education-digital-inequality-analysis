@@ -1,0 +1,262 @@
+.
+├── README.md
+├── book_variaveis_refined.xlsx
+├── dashboard
+├── data
+│   ├── exclusao_digital.duckdb
+│   ├── raw
+│   │   ├── censo_escolar
+│   │   │   └── 2025
+│   │   ├── cetic
+│   │   │   ├── domicilios
+│   │   │   └── educacao
+│   │   ├── dados_mapa
+│   │   │   ├── IDHM.cpg
+│   │   │   ├── IDHM.dbf
+│   │   │   ├── IDHM.prj
+│   │   │   ├── IDHM.qpj
+│   │   │   ├── IDHM.shp
+│   │   │   ├── IDHM.shx
+│   │   │   ├── IDHM.xlsx
+│   │   │   └── IDHM.xlsx:Zone.Identifier
+│   │   ├── temp_censo
+│   │   └── temp_cetic
+│   └── raw_data
+│       ├── _SUCCESS
+│       └── ano=2026
+│           └── mes=05
+├── dbt_project
+│   ├── README.md
+│   ├── analyses
+│   ├── data
+│   │   └── censo_escolar.duckdb
+│   ├── dbt_packages
+│   ├── dbt_project.yml
+│   ├── dev.duckdb
+│   ├── logs
+│   │   ├── dbt.log
+│   │   └── query_log.sql
+│   ├── macros
+│   ├── models
+│   │   ├── refined
+│   │   │   ├── refined_censo_escolar.sql
+│   │   │   ├── refined_censo_smed_regiao.sql
+│   │   │   ├── refined_censo_vulnerabilidade.sql
+│   │   │   └── refined_indicadores_cobertura.sql
+│   │   └── staging
+│   │       ├── sources.yml
+│   │       ├── staging_censo_escolar.sql
+│   │       ├── staging_censo_escolar.yml
+│   │       └── staging_cetic.sql
+│   ├── seeds
+│   │   ├── idhm_municipios.csv
+│   │   ├── labels_dependencia.csv
+│   │   ├── labels_localizacao.csv
+│   │   └── labels_sim_nao.csv
+│   ├── snapshots
+│   ├── target
+│   │   ├── compiled
+│   │   │   └── dbt_project
+│   │   ├── data
+│   │   │   └── censo_escolar
+│   │   ├── dbt-lsp.log
+│   │   ├── generic_tests
+│   │   │   ├── accepted_values_staging_censo_escolar_IN_INTERNET__0__1.sql
+│   │   │   ├── not_null_staging_censo_escolar_CO_ENTIDADE.sql
+│   │   │   └── unique_staging_censo_escolar_CO_ENTIDADE.sql
+│   │   ├── graph.gpickle
+│   │   ├── graph_summary.json
+│   │   ├── manifest.json
+│   │   ├── partial_parse.msgpack
+│   │   ├── run
+│   │   │   └── dbt_project
+│   │   ├── run_results.json
+│   │   ├── schemas
+│   │   │   └── analyzed
+│   │   ├── semantic_manifest.json
+│   │   └── snapshots
+│   └── tests
+├── docker-compose.yml
+├── docs
+│   ├── book_de_variaveis.csv
+│   ├── dicionario_dados.md
+│   └── metodologia_smed.md
+├── estrutura_projeto.txt
+├── figura_1_matriz_correlação.png
+├── figura_2_scree_plot.png
+├── figura_3_boxplot_redes.png
+├── figura_4_boxplot_regional.png
+├── lib
+├── logs
+│   ├── dbt.log
+│   └── query_log.sql
+├── main.py
+├── maps
+├── notebooks
+│   ├── 01_eda.ipynb
+│   └── 02_analise_exclusao.ipynb
+├── pesos_smed.png
+├── python3
+├── requirements.txt
+├── setup.sh
+├── src
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   └── __init__.cpython-312.pyc
+│   ├── ingestion
+│   │   ├── __pycache__
+│   │   │   └── minio_client.cpython-312.pyc
+│   │   └── minio_client.py
+│   ├── processing
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-312.pyc
+│   │   │   ├── pipeline.cpython-312.pyc
+│   │   │   ├── transformacoes.cpython-312.pyc
+│   │   │   └── validacao.cpython-312.pyc
+│   │   ├── pipeline.py
+│   │   ├── transformacoes.py
+│   │   └── validacao.py
+│   ├── scraping
+│   │   ├── __pycache__
+│   │   │   ├── censo_escolar.cpython-312.pyc
+│   │   │   └── cetic.cpython-312.pyc
+│   │   ├── censo_escolar.py
+│   │   └── cetic.py
+│   └── utils
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-312.pyc
+│       │   └── database.cpython-312.pyc
+│       └── database.py
+├── teste_minio.py
+├── teste_spark.py
+└── venv
+    ├── bin
+    │   ├── Activate.ps1
+    │   ├── __pycache__
+    │   │   ├── daff.cpython-312.pyc
+    │   │   ├── find_spark_home.cpython-312.pyc
+    │   │   ├── jp.cpython-312.pyc
+    │   │   └── runxlrd.cpython-312.pyc
+    │   ├── activate
+    │   ├── activate.csh
+    │   ├── activate.fish
+    │   ├── beeline
+    │   ├── beeline.cmd
+    │   ├── daff
+    │   ├── daff.py
+    │   ├── dbt
+    │   ├── debugpy
+    │   ├── debugpy-adapter
+    │   ├── deep
+    │   ├── distro
+    │   ├── docker-image-tool.sh
+    │   ├── dotenv
+    │   ├── f2py
+    │   ├── find-spark-home
+    │   ├── find-spark-home.cmd
+    │   ├── find_spark_home.py
+    │   ├── fonttools
+    │   ├── google-oauthlib-tool
+    │   ├── httpx
+    │   ├── ipython
+    │   ├── ipython3
+    │   ├── jlpm
+    │   ├── jp.py
+    │   ├── jsonpointer
+    │   ├── jsonschema
+    │   ├── jupyter
+    │   ├── jupyter-console
+    │   ├── jupyter-dejavu
+    │   ├── jupyter-events
+    │   ├── jupyter-execute
+    │   ├── jupyter-kernel
+    │   ├── jupyter-kernelspec
+    │   ├── jupyter-lab
+    │   ├── jupyter-labextension
+    │   ├── jupyter-labhub
+    │   ├── jupyter-migrate
+    │   ├── jupyter-nbconvert
+    │   ├── jupyter-notebook
+    │   ├── jupyter-run
+    │   ├── jupyter-server
+    │   ├── jupyter-troubleshoot
+    │   ├── jupyter-trust
+    │   ├── load-spark-env.cmd
+    │   ├── load-spark-env.sh
+    │   ├── normalizer
+    │   ├── numpy-config
+    │   ├── pip
+    │   ├── pip3
+    │   ├── pip3.12
+    │   ├── pybabel
+    │   ├── pyftmerge
+    │   ├── pyftsubset
+    │   ├── pygmentize
+    │   ├── pyjson5
+    │   ├── pyproj
+    │   ├── pyspark
+    │   ├── pyspark.cmd
+    │   ├── pyspark2.cmd
+    │   ├── python -> python3
+    │   ├── python3 -> /usr/bin/python3
+    │   ├── python3.12 -> python3
+    │   ├── run-example
+    │   ├── run-example.cmd
+    │   ├── runxlrd.py
+    │   ├── send2trash
+    │   ├── slugify
+    │   ├── spark-class
+    │   ├── spark-class.cmd
+    │   ├── spark-class2.cmd
+    │   ├── spark-connect-shell
+    │   ├── spark-pipelines
+    │   ├── spark-shell
+    │   ├── spark-shell.cmd
+    │   ├── spark-shell2.cmd
+    │   ├── spark-sql
+    │   ├── spark-sql.cmd
+    │   ├── spark-sql2.cmd
+    │   ├── spark-submit
+    │   ├── spark-submit.cmd
+    │   ├── spark-submit2.cmd
+    │   ├── sparkR
+    │   ├── sparkR.cmd
+    │   ├── sparkR2.cmd
+    │   ├── sqlformat
+    │   ├── tb-gcp-uploader
+    │   ├── tqdm
+    │   ├── ttx
+    │   ├── websockets
+    │   └── wsdump
+    ├── etc
+    │   └── jupyter
+    │       ├── jupyter_notebook_config.d
+    │       ├── jupyter_server_config.d
+    │       └── nbconfig
+    ├── include
+    │   └── python3.12
+    ├── lib
+    │   └── python3.12
+    │       └── site-packages
+    ├── lib64 -> lib
+    ├── pyvenv.cfg
+    └── share
+        ├── applications
+        │   ├── jupyter-notebook.desktop
+        │   └── jupyterlab.desktop
+        ├── icons
+        │   └── hicolor
+        ├── jupyter
+        │   ├── kernels
+        │   ├── lab
+        │   ├── labextensions
+        │   ├── nbconvert
+        │   └── nbextensions
+        ├── man
+        │   └── man1
+        └── py4j
+            └── py4j0.10.9.9.jar
+
+79 directories, 181 files
