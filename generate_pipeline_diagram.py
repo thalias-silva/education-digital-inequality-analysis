@@ -20,74 +20,88 @@ def render_mermaid(stages):
     diagram = ["flowchart LR"]
 
     # =========================
-    # SOURCES
+    # SOURCES (ORIGENS DOS DADOS)
     # =========================
     diagram.append('CENSO["📊 Censo Escolar (INEP)"]')
     diagram.append('CETIC["🌐 CETIC TIC Educação/Domicílios"]')
 
     # =========================
-    # INGESTION (GLUE / SCRAPING)
+    # INGESTION & PROCESSING (PYTHON + DUCKDB)
     # =========================
-    diagram.append('GLUE["⚙️ AWS Glue / Python Scrapers"]')
-    diagram.append('VALID["🔍 Validação & Tratamento Inicial"]')
+    diagram.append('SCRAPE["⚙️ Python Scrapers / Ingestion"]')
+    diagram.append('PROC["🧹 Processamento & Validação (transformacoes.py)"]')
 
     # =========================
-    # DATA LAKE (S3 STYLE)
+    # DATA LAKE (MINIO BUCKETS)
     # =========================
-    diagram.append('BRONZE["🟤 Data Lake - Bronze (Raw / MinIO)"]')
-    diagram.append('SILVER["⚪ Data Lake - Silver (Cleaned / DuckDB)"]')
+    diagram.append('RAW["🟤 Data Lake - Camada Raw (MinIO)"]')
+    diagram.append('TRUSTED["⚪ Data Lake - Camada Trusted (Parquet / MinIO)"]')
 
     # =========================
-    # DBT LAYER
-    # =========================
-    diagram.append('DBT_STG["🟡 dbt Staging Models"]')
-    diagram.append('DBT_REF["🟠 dbt Refined Models"]')
-
-    # =========================
-    # LINEAGE EXEMPLO (DBT REAL)
+    # DBT - STAGING LAYER (VIEWS)
     # =========================
     diagram.append('STG_CENSO["staging_censo_escolar"]')
     diagram.append('STG_CETIC["staging_cetic"]')
-    diagram.append('REF_EX["refined_indicadores_cobertura"]')
 
     # =========================
-    # ANALYTICS
+    # DBT - REFINED LAYER (TABLES / MARTS)
+    # =========================
+    diagram.append('REF_CENSO["refined_censo_escolar"]')
+    diagram.append('REF_SMED["refined_censo_smed_regiao"]')
+    diagram.append('REF_VULN["refined_censo_vulnerabilidade"]')
+    diagram.append('REF_COV["refined_indicadores_cobertura"]')
+
+    # =========================
+    # ANALYTICS / CONSUMPTION
     # =========================
     diagram.append('ANL["📈 Analytics / Notebooks (PCA, EDA)"]')
 
     # =========================
-    # FLOWS (DATA PLATFORM)
+    # PIPELINE FLOWS (FRENTE PYTHON)
     # =========================
-    diagram.append("CENSO --> GLUE")
-    diagram.append("CETIC --> GLUE")
-    diagram.append("GLUE --> VALID")
-    diagram.append("VALID --> BRONZE")
-    diagram.append("BRONZE --> SILVER")
-    diagram.append("SILVER --> DBT_STG")
-    diagram.append("DBT_STG --> DBT_REF")
-    diagram.append("DBT_REF --> ANL")
+    diagram.append("CENSO --> SCRAPE")
+    diagram.append("CETIC --> SCRAPE")
+    diagram.append("SCRAPE --> RAW")
+    diagram.append("RAW --> PROC")
+    diagram.append("PROC --> TRUSTED")
+    
+    # O dbt consome os Parquets da Trusted
+    diagram.append("TRUSTED --> STG_CENSO")
+    diagram.append("TRUSTED --> STG_CETIC")
 
     # =========================
-    # DBT LINEAGE (IMPORTANTE!)
+    # DBT INTERNAL LINEAGE (LINHAGEM DOS MODELOS)
     # =========================
-    diagram.append("DBT_STG --> STG_CENSO")
-    diagram.append("DBT_STG --> STG_CETIC")
-    diagram.append("STG_CENSO --> REF_EX")
-    diagram.append("STG_CETIC --> REF_EX")
+    # Modelos refinados que dependem do Censo de Staging
+    diagram.append("STG_CENSO --> REF_CENSO")
+    diagram.append("STG_CENSO --> REF_SMED")
+    diagram.append("STG_CENSO --> REF_VULN")
+    
+    # Modelo de cobertura cruza dados das duas fontes (Censo e CETIC)
+    diagram.append("STG_CENSO --> REF_COV")
+    diagram.append("STG_CETIC --> REF_COV")
+
+    # Entrega final para a camada de Analytics
+    diagram.append("REF_CENSO --> ANL")
+    diagram.append("REF_SMED --> ANL")
+    diagram.append("REF_VULN --> ANL")
+    diagram.append("REF_COV --> ANL")
 
     # =========================
-    # STYLES (AWS STYLE)
+    # STYLES (MDS / AWS PALETTE)
     # =========================
     diagram.append("classDef source fill:#e3f2fd,stroke:#1565c0")
-    diagram.append("classDef glue fill:#ede7f6,stroke:#512da8")
+    diagram.append("classDef Python fill:#ede7f6,stroke:#512da8")
     diagram.append("classDef lake fill:#e0f7fa,stroke:#006064")
-    diagram.append("classDef dbt fill:#fff3e0,stroke:#ef6c00")
+    diagram.append("classDef dbtStg fill:#fff3e0,stroke:#ffb74d")
+    diagram.append("classDef dbtRef fill:#ffe0b2,stroke:#f57c00")
     diagram.append("classDef analytics fill:#e8f5e9,stroke:#2e7d32")
 
     diagram.append("class CENSO,CETIC source")
-    diagram.append("class GLUE,VALID glue")
-    diagram.append("class BRONZE,SILVER lake")
-    diagram.append("class DBT_STG,DBT_REF,STG_CENSO,STG_CETIC,REF_EX dbt")
+    diagram.append("class SCRAPE,PROC Python")
+    diagram.append("class RAW,TRUSTED lake")
+    diagram.append("class STG_CENSO,STG_CETIC dbtStg")
+    diagram.append("class REF_CENSO,REF_SMED,REF_VULN,REF_COV dbtRef")
     diagram.append("class ANL analytics")
 
     return "\n".join(diagram)
